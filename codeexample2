@@ -1,5 +1,8 @@
 //https://gamedev.stackexchange.com/questions/165380/how-to-get-camera-to-follow-car
 
+
+//instead of scrolling bcakground, this code mkaes the camera follow the player in each direction you go
+
 import pygame
 import random
 
