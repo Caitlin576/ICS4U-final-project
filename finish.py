@@ -20,5 +20,3 @@ class Finish(pygame.sprite.Sprite):
     def increment(self):
         self.rect.y += 4
 
-
-        

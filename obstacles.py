@@ -25,5 +25,3 @@ class Obstacles(pygame.sprite.Sprite):
         if pygame.sprite.spritecollide(self, spriteGroup, False):
             self.speedx = -self.speedx
             self.speedy = -self.speedy
-    
-        
