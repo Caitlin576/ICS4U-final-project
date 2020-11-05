@@ -9,6 +9,7 @@ class Car(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         self.speed = 4
+        self.score = 1000
  
     def moveRight(self):
         
@@ -20,16 +21,35 @@ class Car(pygame.sprite.Sprite):
 
     def moveUp(self):
         
-        self.rect.y += self.speed
+        self.rect.y -= self.speed
 
     def moveDown(self):
-        self.rect.y -= self.speed
+        self.rect.y += self.speed
+
+    def playerBound(self):
+        if self.rect.x < 0:
+            self.rect.x = 0
+
+        if self.rect.x > 536:
+            self.rect.x = 536
+
+        if self.rect.y > 536:
+            self.rect.y = 536
+
+        if self.rect.x < 70:
+            self.rect.x = 70
+
+        if self.rect.x > 550:
+            self.rect.x = 550
+        
         
 
     def collide(self, spriteGroup, direct):
 
 
+
         if pygame.sprite.spritecollide(self, spriteGroup, False):
+            self.score -= 1
             if direct == 'l':
                 self.rect.left += 15
                 #self.rect.top -= 5
@@ -42,6 +62,8 @@ class Car(pygame.sprite.Sprite):
 
             if direct == 'd':
                 self.rect.top += 15
+
+
                 
   
             
