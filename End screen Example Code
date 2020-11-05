@@ -1,0 +1,34 @@
+import pygame
+ 
+# Define some colors
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+GREEN = (0, 255, 0)
+ 
+pygame.init()
+ 
+# Set the height and width of the screen
+size = [700, 500]
+screen = pygame.display.set_mode(size)
+ 
+pygame.display.set_caption("Game Over Example")
+ 
+# Loop until the user clicks the close button.
+done = False
+ 
+# Used to manage how fast the screen updates
+clock = pygame.time.Clock()
+ 
+# Starting position of the rectangle
+rect_x = 50
+rect_y = 50
+ 
+# Speed and direction of rectangle
+rect_change_x = 5
+rect_change_y = 5
+ 
+# This is a font we use to draw text on the screen (size 36)
+font = pygame.font.Font(None, 36)
+ 
+# Use this boolean variable to trigger if the game is over.
+game_over = False
