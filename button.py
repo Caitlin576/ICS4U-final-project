@@ -3,7 +3,7 @@ import pygame
 
 class Button(pygame.sprite.Sprite):
 
-    def __init__(self, x, y, w, h, font, text, colour1, colour2):
+    def __init__(self, x, y, w, h, colour1, colour2):
         super().__init__()
         self.w = w
         self.h = h
@@ -11,8 +11,8 @@ class Button(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-        self.font = font
-        self.text = text
+        #self.font = font
+        #self.text = text
         self.defaultColour = colour1
         self.hoverColour = colour2
       

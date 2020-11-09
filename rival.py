@@ -19,8 +19,8 @@ class Rival(pygame.sprite.Sprite):
         if self.rect.y > 500:
             self.rect.y = 500
 
-        if self.rect.y < 0:
-            self.rect.y = 0
+        if self.rect.y < -64:
+            self.rect.y = -64
 
         if self.rect.x < 70:
             self.rect.x = 70

@@ -17,6 +17,7 @@ BLACK = (0, 0, 0)
 GREY = (233, 233, 233)
 WHITE = (255, 255, 255)
 
+
 startScore = 100
 currentDirA = ''
 currentDirB = ''
@@ -25,74 +26,73 @@ level = 0
 
 bgCount = 0
 
-screenw = 640
-screenh = 600
+#done up to here
+screenw = 640 #done (4 lines)
+screenh = 600 
 screen = pygame.display.set_mode((screenw, screenh))
 pygame.display.set_caption("Game")
 
-all_sprites = pygame.sprite.Group()
 
-player_list = pygame.sprite.Group()
 
-obs_list = pygame.sprite.Group()
+player_list = pygame.sprite.Group() #done
 
-boundary_list = pygame.sprite.Group()
+obs_list = pygame.sprite.Group() #done
 
+boundary_list = pygame.sprite.Group() #done
+
+#done (4 lines)
 playerStartX = 400
 playerStartY = 450
- 
 playerCar = Car(playerStartX, playerStartY)
- 
 player_list.add(playerCar)
 
 
-
+#done (3 lines)
 boundLeft = Boundary(50)
 boundRight = Boundary(550)
-
 boundary_list.add(boundLeft, boundRight)
 
-bg = pygame.image.load("roadImg.png").convert_alpha()
+bg = pygame.image.load("roadImg.png").convert_alpha() #done
 
+
+#done (3 lines)
 scoreFont = pygame.font.SysFont('Courier', 20)
-
 menuFont = pygame.font.SysFont('Courier', 40)
-
 countFont = pygame.font.SysFont('Arial', 200)
 
-easyButton = Button(250, 250, 150, 50, menuFont, "Easy", GREY, WHITE)
-hardButton = Button(250, 350, 150, 50, menuFont, "Hard", GREY, WHITE)
-instructionsButton = Button(175, 450, 300, 50, menuFont, "Backstory", GREY, WHITE)
-
+#done (5 lines)
+easyButton = Button(250, 250, 150, 50, menuFont, GREY, WHITE)
+hardButton = Button(250, 350, 150, 50, menuFont,  GREY, WHITE)
+instructionsButton = Button(175, 450, 300, 50, menuFont, GREY, WHITE)
 buttonGroup = pygame.sprite.Group()
-
 buttonGroup.add(easyButton, hardButton, instructionsButton)
 
-finishLineVisible = False
+finishLineVisible = False #probably not needed
 
+#done(5 lines)
 finishY = -4
-
-print("finishY:", finishY)
-
 finishImage = Finish()
-
 finishGroup = pygame.sprite.Group()
-
 finishGroup.add(finishImage)
+finishAppear = 2000
 
+#done(3 lines)
 pitStop = Pitstop()
 pitGroup = pygame.sprite.Group()
 pitGroup.add(pitStop)
 
-rivalStartX = 100
+#done (5 lines)
+rivalStartX = 150
 rivalStartY = 450
 rivalCar = Rival(rivalStartX, rivalStartY)
 rival_list = pygame.sprite.Group()
 rival_list.add(rivalCar)
 
-startGame = True
+startGame = False
 
 countdownComplete = False
+
+#done up to here
 
 
 
@@ -103,7 +103,7 @@ def drawSprites():
 
     screen.blit(bg, (50, bgY))
     screen.blit(bg, (50, bgY2))
-    player_list.update()
+    #player_list.update()
 
     rival_list.draw(screen)
 
@@ -111,7 +111,7 @@ def drawSprites():
     text = scoreFont.render(str(playerCar.score), 1, (0, 0, 0))
     screen.blit(text, (570, 10))
 
-    if bgCount > 500:
+    if bgCount > finishAppear:
         print("finsh drawn")
         finishGroup.draw(screen)
     
@@ -128,8 +128,6 @@ def drawSprites():
     obs_list.draw(screen)
 
 def instructions():
-
-    #print("instructions displayed")
 
     running = True
     
@@ -148,7 +146,6 @@ def instructions():
         screen.fill(GREEN)
 
         backstory = menuFont.render("(Backstory)", 1, (0, 0, 0))
-        #print("text displayed")
 
         screen.blit(backstory, (screenw/2 - backstory.get_width()/2, 200))
 
@@ -160,13 +157,13 @@ def startScreen():
 
     global level, startGame
 
-    startGame = True
+    #startGame = True
 
-    while startGame:
+    while startGame == False:
         pygame.time.delay(100)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                startGame = False
+                startGame = True
                 pygame.quit()
 
         screen.fill(BLUE)
@@ -180,7 +177,7 @@ def startScreen():
             if click[0] == 1:
                 print("click")
                 level = 1
-                startGame = False
+                startGame = True
                 print("startGame:", startGame)
 
         else:
@@ -190,7 +187,7 @@ def startScreen():
             hardButton.hover()
             if click[0] == 1:
                 level = 3
-                startGame = False
+                startGame = True
             
         else:
             hardButton.regular()
@@ -239,35 +236,24 @@ def countdown():
         one = countFont.render("1", 1, BLACK)
         go = countFont.render("GO", 1, BLACK)
 
-        #def drawCount(text):
+        def displayNumber(x):
+            drawSprites()
+            screen.blit(x, (screenw/2 - x.get_width()/2, 250))
+            pygame.display.update()
+            pygame.time.delay(1000)
 
-        #drawSprites()
+        displayNumber(three)
+
+        displayNumber(two)
+
+        displayNumber(one)
+
+        displayNumber(go)
             
-        #screen.blit(text, (screenw/2 - text.get_width()/2, 250))
 
-        #pygame.display.update()
-            
-        #pygame.time.delay(1000)
-
-        drawSprites()
-        screen.blit(three, (screenw/2 - three.get_width()/2, 250))
-        pygame.display.update()
-        pygame.time.delay(1000)
-
-        drawSprites()
-        screen.blit(two, (screenw/2 - two.get_width()/2, 250))
-        pygame.display.update()
-        pygame.time.delay(1000)
         
-        drawSprites()
-        screen.blit(one, (screenw/2 - one.get_width()/2, 250))
-        pygame.display.update()
-        pygame.time.delay(1000)
 
-        drawSprites()
-        screen.blit(go, (screenw/2 - go.get_width()/2, 250))
-        pygame.display.update()
-        pygame.time.delay(1000)
+        
 
         drawSprites()
         pygame.display.update()
@@ -302,7 +288,7 @@ def endScreenLoss():
 
         countdownComplete = False
 
-        finishImage.rect.y = -10
+        finishImage.rect.y = -30
         screen.fill(BLUE)
         gameOver = menuFont.render("Game Over!", 1, (0, 0, 0))
         screen.blit(gameOver, (screenw/2 - gameOver.get_width()/2, 200))
@@ -358,22 +344,22 @@ def endScreenWin():
         pygame.display.update()
   
 
-bgY = 0
-bgY2 = bg.get_height()
+bgY = 0 #done
+bgY2 = bg.get_height() #done
 
-pause = 0
-speed = 60
+pause = 0 #done
+speed = 60 #done
 
-obstaclesCreated = False
+obstaclesCreated = False #done
 
-running = True
-clock=pygame.time.Clock()
+running = True #done
+clock=pygame.time.Clock() #done
  
 while running:
 
     print("startGame 1:", startGame)
 
-    while startGame == True:
+    while startGame == False:
         
         startScreen()
         print("startGame in main loop:", startGame)
@@ -403,8 +389,8 @@ while running:
             pygame.time.delay(600)
             endScreenLoss()
 
-    if rivalCar.count >= 2000:
-        endScreenLoss()
+    #if pygame.sprite.spritecollide(rivalCar, finishGroup, False):
+        #endScreenLoss()
         
     for event in pygame.event.get():
         if event.type==pygame.QUIT:
@@ -454,7 +440,7 @@ while running:
             bgCount+= 1
             print("bgCount:", bgCount)
 
-            if bgCount > 500:
+            if bgCount > finishAppear:
                 
                 finishImage.increment()
 
@@ -535,6 +521,9 @@ while running:
 
     if pygame.sprite.spritecollide(playerCar, pitGroup, True):
         playerCar.score += 30
+
+    if pygame.sprite.spritecollide(rivalCar, pitGroup, True):
+        pitStop.kill()
             
 
     pygame.display.update()
