@@ -1,3 +1,4 @@
+
 import pygame
 
 class Background(pygame.sprite.Sprite):
@@ -9,5 +10,3 @@ class Background(pygame.sprite.Sprite):
         self.move = 1.4
         self.rect.x = 150
         self.rect.y = y
-        
-        

@@ -4,7 +4,8 @@ class Rival(pygame.sprite.Sprite):
 
     def __init__(self, x, y):
         super().__init__()
-        self.image = pygame.image.load('bluesquare.png').convert_alpha()
+        self.pic = pygame.image.load("rivalImg.png").convert_alpha()
+        self.image = pygame.transform.rotate(self.pic, 90 )
         self.rect = self.image.get_rect()
         self.speedx = 3.5
         self.speedy = 6
@@ -53,15 +54,3 @@ class Rival(pygame.sprite.Sprite):
                 #hit from the top
                 if sprite.rect.y < self.rect.y:
                     self.rect.y += 3.5
-
-        
-
-                
-                
-
-
-          
-            
-
-            
-            

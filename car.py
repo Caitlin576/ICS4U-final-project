@@ -1,15 +1,19 @@
 import pygame
 
+pygame.__init__
+
 class Car(pygame.sprite.Sprite):
         
     def __init__(self, x, y):
         super().__init__()
-        self.image = pygame.image.load("purplesquare.png").convert_alpha()
+        self.pic = pygame.image.load("carImg.png").convert_alpha()
+        self.image = pygame.transform.rotate(self.pic, 90 )
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
         self.speed = 5
         self.score = 100
+        self.sound = pygame.mixer.Sound("carcrashsoundeffect.wav")
  
     def moveRight(self):
         
@@ -50,7 +54,8 @@ class Car(pygame.sprite.Sprite):
     def collideBound(self, spriteGroup, direct):
 
         if pygame.sprite.spritecollide(self, spriteGroup, False):
-            self.score -= 1
+            pygame.mixer.Sound.play(self.sound)
+            #self.score -= 1
             if direct == 'l':
                 self.rect.left += 15
                 #self.rect.top -= 5
@@ -84,13 +89,3 @@ class Car(pygame.sprite.Sprite):
                 #hit from the top
                 if sprite.rect.y < self.rect.y:
                     self.rect.y += 3.5
-
-
-
-
-
-
-
-
-
-        

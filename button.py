@@ -23,8 +23,3 @@ class Button(pygame.sprite.Sprite):
 
     def hover(self):
         self.image.fill(self.hoverColour)
-
-    
-        
-        
-        

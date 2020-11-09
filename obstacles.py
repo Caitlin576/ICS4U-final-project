@@ -5,7 +5,7 @@ class Obstacles(pygame.sprite.Sprite):
 
     def __init__(self, window):
         super().__init__()
-        self.image = pygame.image.load("redsquare.png").convert_alpha()
+        self.image = pygame.image.load("obstacleImg.png").convert_alpha()
         self.rect = self.image.get_rect()
         self.speedx = random.randint(3, 9)
         self.speedy = random.randint(4, 7)
