@@ -4,11 +4,11 @@ class Car(pygame.sprite.Sprite):
         
     def __init__(self, x, y):
         super().__init__()
-        self.image = pygame.image.load("purplesquare.png")
+        self.image = pygame.image.load("purplesquare.png").convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-        self.speed = 4
+        self.speed = 5
         self.score = 100
  
     def moveRight(self):
@@ -44,7 +44,7 @@ class Car(pygame.sprite.Sprite):
 
         if self.rect.x > 550:
             self.rect.x = 550
-        
+
         
 
     def collideBound(self, spriteGroup, direct):
@@ -65,10 +65,32 @@ class Car(pygame.sprite.Sprite):
              #   self.rect.top += 15
 
 
-    
+    def playerCollision(self, spriteGroup):
+        if pygame.sprite.spritecollide(self, spriteGroup, False):
+            self.score -= 1
+            for sprite in spriteGroup:
+                #hit from the right
+                if sprite.rect.x < self.rect.x:
+                    self.rect.x -= 3.5
+                    
+                #hit from the left
+                if sprite.rect.x > self.rect.x: 
+                    self.rect.x += 3.5
+                    
+                #hit from the bottom
+                if sprite.rect.y > self.rect.y:
+                    
+                    self.rect.y -= 3.5
+                #hit from the top
+                if sprite.rect.y < self.rect.y:
+                    self.rect.y += 3.5
 
 
-    
 
 
 
+
+
+
+
+        

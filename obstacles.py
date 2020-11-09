@@ -5,10 +5,10 @@ class Obstacles(pygame.sprite.Sprite):
 
     def __init__(self, window):
         super().__init__()
-        self.image = pygame.image.load("redsquare.png")
+        self.image = pygame.image.load("redsquare.png").convert_alpha()
         self.rect = self.image.get_rect()
-        self.speedx = random.randint(3, 7)
-        self.speedy = random.randint(3, 5)
+        self.speedx = random.randint(3, 9)
+        self.speedy = random.randint(4, 7)
         self.window = window
 
     def update(self):
