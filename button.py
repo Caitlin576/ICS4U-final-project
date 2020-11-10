@@ -1,5 +1,9 @@
 import pygame
 
+pygame.init()
+
+pygame.mixer.music.load('GameMusic.wav')
+pygame.mixer.music.play(-1)
 
 class Button(pygame.sprite.Sprite):
 

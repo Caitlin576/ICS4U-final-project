@@ -1,5 +1,8 @@
-
 import pygame
+
+pygame.init()
+pygame.mixer.music.load('GameMusic.wav')
+pygame.mixer.music.play(-1)
 
 class Boundary(pygame.sprite.Sprite):
     def __init__(self, x):

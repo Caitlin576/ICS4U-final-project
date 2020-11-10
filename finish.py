@@ -1,4 +1,10 @@
+  
 import pygame
+
+pygame.init()
+
+pygame.mixer.music.load('GameMusic.wav')
+pygame.mixer.music.play(-1)
 
 class Finish(pygame.sprite.Sprite):
 
@@ -8,7 +14,7 @@ class Finish(pygame.sprite.Sprite):
         self.image = pygame.image.load("finishImg.png").convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.x = 70
-        self.rect.y = -4
+        self.rect.y = -200
         
 
     def increment(self):

@@ -1,8 +1,13 @@
 import pygame
 
-pygame.__init__
+pygame.init()
+
+pygame.mixer.music.load('GameMusic.wav')
+pygame.mixer.music.play(-1)
 
 class Car(pygame.sprite.Sprite):
+
+    
         
     def __init__(self, x, y):
         super().__init__()
@@ -16,21 +21,32 @@ class Car(pygame.sprite.Sprite):
         self.sound = pygame.mixer.Sound("carcrashsoundeffect.wav")
  
     def moveRight(self):
-        
+        pygame.mixer.music.play(-1)
+
         self.rect.x += self.speed
  
     def moveLeft(self):
+
+        pygame.mixer.music.play(-1)
         
         self.rect.x -= self.speed
 
     def moveUp(self):
+
+        pygame.mixer.music.play(-1)
         
         self.rect.y -= self.speed
 
     def moveDown(self):
+
+        pygame.mixer.music.play(-1)
+        
         self.rect.y += self.speed
 
     def playerBound(self):
+
+        pygame.mixer.music.play(-1)
+
         if self.rect.x < 0:
             self.rect.x = 0
 
@@ -44,18 +60,23 @@ class Car(pygame.sprite.Sprite):
             self.rect.y = 100
 
         if self.rect.x < 70:
+            pygame.mixer.Sound.play(self.sound)
+            self.score -= 1
             self.rect.x = 70
 
-        if self.rect.x > 550:
-            self.rect.x = 550
-
+        if self.rect.x > 486:
+            pygame.mixer.Sound.play(self.sound)
+            self.score -= 1
+            self.rect.x = 486
         
 
     def collideBound(self, spriteGroup, direct):
 
+        pygame.mixer.music.play(-1)
+
         if pygame.sprite.spritecollide(self, spriteGroup, False):
             pygame.mixer.Sound.play(self.sound)
-            #self.score -= 1
+            self.score -= 1
             if direct == 'l':
                 self.rect.left += 15
                 #self.rect.top -= 5
@@ -71,7 +92,10 @@ class Car(pygame.sprite.Sprite):
 
 
     def playerCollision(self, spriteGroup):
+
+        pygame.mixer.music.play(-1)
         if pygame.sprite.spritecollide(self, spriteGroup, False):
+            pygame.mixer.Sound.play(self.sound)
             self.score -= 1
             for sprite in spriteGroup:
                 #hit from the right

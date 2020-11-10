@@ -1,6 +1,11 @@
 import pygame
 
+pygame.init()
+
 class Rival(pygame.sprite.Sprite):
+
+    pygame.mixer.music.load('GameMusic.wav')
+    pygame.mixer.music.play(-1)
 
     def __init__(self, x, y):
         super().__init__()

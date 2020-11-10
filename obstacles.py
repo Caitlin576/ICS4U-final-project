@@ -1,7 +1,15 @@
 import pygame
 import random
 
+pygame.init()
+
+pygame.mixer.music.load('GameMusic.wav')
+pygame.mixer.music.play(-1)
+
 class Obstacles(pygame.sprite.Sprite):
+
+    pygame.mixer.music.load('GameMusic.wav')
+    pygame.mixer.music.play(-1)
 
     def __init__(self, window):
         super().__init__()
@@ -25,3 +33,16 @@ class Obstacles(pygame.sprite.Sprite):
         if pygame.sprite.spritecollide(self, spriteGroup, False):
             self.speedx = -self.speedx
             self.speedy = -self.speedy
+
+    def obsBound(self, w, h):
+        if self.rect.x > w:
+            self.rect.x = w
+            self.rect.x -= 2
+
+        if self.rect.x < 0:
+            self.rect.x = 0
+            self.rect.x += 2
+
+        if self.rect.y > h:
+            self.rect.y = h
+            self.rect.y -= 2

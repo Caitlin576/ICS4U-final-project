@@ -1,6 +1,13 @@
 import pygame, random #import pygame and random libraries
 
-#import classes created in other modules 
+import car
+import obstacles
+import boundary
+import finish
+import rival
+import button
+
+#import classes and functions created in other modules 
 from car import Car
 from obstacles import Obstacles
 from boundary import Boundary
@@ -8,6 +15,7 @@ from finish import Finish
 from pitstop import Pitstop
 from rival import Rival
 from button import Button
+from printInstructions import printInstruct
 
 #initialize pygame
 pygame.init()
@@ -20,7 +28,8 @@ screen = pygame.display.set_mode((screenw, screenh))
 
 #set the caption and icon of the game
 pygame.display.set_caption("Turbo!")
-#DONT FORGET TO FIX THIS!!!
+icon = pygame.image.load("carImg.png")
+pygame.display.set_icon(icon)
 
 #declare rgb values for colour constants to be used in the game
 GREEN = (13, 160, 21)
@@ -31,6 +40,7 @@ WHITE = (255, 255, 255)
 
 winSound = pygame.mixer.Sound("youwin.wav")
 loseSound = pygame.mixer.Sound("youlose.wav")
+#zoomSound = pygame.mixer.Sound("zoom.m4a")
 
 #declare fonts to use later when displaying text
 smallFont = pygame.font.SysFont('Courier', 20) #formerly score, menu, count
@@ -83,17 +93,16 @@ finishY = -200
 finishYstart = -200
 #create a variable finishAppear to use later to check whether the player
 #has travelled far enough to reach the finish line
-finishAppear = 500
+finishAppear = 1500
 
 
-#create an object of the class pitstop(in a seperate module)
-pitStop = Pitstop()
+
+
 #create a sprite group to hold the pitStop, add pitStop to the group
 #(used for collision detection)
 pitGroup = pygame.sprite.Group()
-pitGroup.add(pitStop)
 #create a variable to use to check whether or not to display the pitstop on the screen
-pitAppear = 100
+pitAppear = 750
 
 
 #create objects of the Button class, assign them x and y positions, width and height,
@@ -139,6 +148,7 @@ bgCount = 0 #this variable records the 'distance' that the user has scrolled, so
 startGame = False
 countdownComplete = False
 obstaclesCreated = False
+pitCreated = False
 pause = 0
 
 #a clock is created to control frames per second, and a speed variable is created to be
@@ -175,15 +185,13 @@ def drawSprites():
     #which changes as the user scrolls
     screen.blit(bg, (50, bgY))
     screen.blit(bg, (50, bgY2))
-    #player_list.update()
-    
-    #draw the opponent's car onto the screen
-    rivalGroup.draw(screen)
 
     #create a variable to hold the text for the player's score and display it
     #in the top right corner
-    scoreText = smallFont.render(str(playerCar.score), 1, (0, 0, 0))
-    screen.blit(scoreText, (570, 10))
+    scoreWord = smallFont.render("Score:", 1, BLACK)
+    scoreNum = smallFont.render(str(playerCar.score), 1, BLACK)
+    screen.blit(scoreWord,(570, 10))
+    screen.blit(scoreNum, (570, 29))
 
     #if the user has scrolled farther than the finishAppear variable value, the
     #finish line appears on the screen (bgCount increments as the user moves their
@@ -202,6 +210,9 @@ def drawSprites():
 
     #draws the object in the playerGroup onto the screen
     playerGroup.draw(screen)
+
+    #draw the opponent's car onto the screen
+    rivalGroup.draw(screen)
     
     #call the update method on the obstacles in obsGroup (method is in the obstacles
     #module) and draws the obstacles onto the screen
@@ -231,34 +242,18 @@ def instructions():
         #the screen is filled green
         screen.fill(GREEN)
 
-        #variable to render the text with the instructions and story
-        backstory1 = smallFont.render(instructionString1, 1, (0, 0, 0))
-        backstory2 = smallFont.render(instructionString2, 1, (0, 0, 0))
-        backstory3 = smallFont.render(instructionString3, 1, (0, 0, 0))
-        backstory4 = smallFont.render(instructionString4, 1, (0, 0, 0))
-        backstory5 = smallFont.render(instructionString5, 1, (0, 0, 0))
-        backstory6 = smallFont.render(instructionString6, 1, (0, 0, 0))
-        backstory7 = smallFont.render(instructionString7, 1, (0, 0, 0))
-        backstory8 = smallFont.render(instructionString8, 1, (0, 0, 0))
-        backstory9 = smallFont.render(instructionString9, 1, (0, 0, 0))
-        backstory10 = smallFont.render(instructionString10, 1, (0, 0, 0))
-        backstory11= smallFont.render(instructionString11, 1, (0, 0, 0))
-        backstory12= smallFont.render(instructionString12, 1, (0, 0, 0))
-
-        #display the backstory variable on the screen. To center it, the x variable is set to
-        #half the width of the screen, minus half the width of the text. The y value is set to 200
-        screen.blit(backstory1, (screenw/2 - backstory1.get_width()/2, 20))
-        screen.blit(backstory2, (screenw/2 - backstory2.get_width()/2, 60))
-        screen.blit(backstory3, (screenw/2 - backstory3.get_width()/2, 100))
-        screen.blit(backstory4, (screenw/2 - backstory4.get_width()/2, 140))
-        screen.blit(backstory5, (screenw/2 - backstory5.get_width()/2, 180))
-        screen.blit(backstory6, (screenw/2 - backstory6.get_width()/2, 220))
-        screen.blit(backstory7, (screenw/2 - backstory7.get_width()/2, 260))
-        screen.blit(backstory8, (screenw/2 - backstory8.get_width()/2, 300))
-        screen.blit(backstory9, (screenw/2 - backstory9.get_width()/2, 340))
-        screen.blit(backstory10, (screenw/2 - backstory10.get_width()/2, 380))
-        screen.blit(backstory11, (screenw/2 - backstory11.get_width()/2, 420))
-        screen.blit(backstory12, (screenw/2 - backstory12.get_width()/2, 460))
+        printInstruct(instructionString1, 20, smallFont, BLACK, screen)
+        printInstruct(instructionString2, 60, smallFont, BLACK, screen)
+        printInstruct(instructionString3, 100, smallFont, BLACK, screen)
+        printInstruct(instructionString4, 140, smallFont, BLACK, screen)
+        printInstruct(instructionString5, 180, smallFont, BLACK, screen)
+        printInstruct(instructionString6, 220, smallFont, BLACK, screen)
+        printInstruct(instructionString7, 260, smallFont, BLACK, screen)
+        printInstruct(instructionString8, 300, smallFont, BLACK, screen)
+        printInstruct(instructionString9, 340, smallFont, BLACK, screen)
+        printInstruct(instructionString10, 380, smallFont, BLACK, screen)
+        printInstruct(instructionString11, 420, smallFont, BLACK, screen)
+        printInstruct(instructionString12, 460, smallFont, BLACK, screen)
 
         #the display is updated
         pygame.display.update()
@@ -406,15 +401,17 @@ def countdown():
         #running is false so that the function exits
         running = False
 
+        playMusic()
+
 #define a function for the end screen when the user has lost the game
 def endScreenLoss():
-    #define the scope for pause, and countdownComplete as global so
+    #define the scope for pause, obstaclesCreated, and countdownComplete as global so
     #they can be changed in the function and their values can be saved for use outside
     #of the function
-    global pause, bgCount, countdownComplete
+    global pause, bgCount, countdownComplete, obstaclesCreated, startGame, pitCreated
 
     #reset bgCount, pause, the player and rival start positions, the player's score, countdown
-    #complete, and the finish line's y coordinate to the way they were at
+    #complete, obstaclesCreated and the finish line's y coordinate to the way they were at
     #the beginnning so the user can play again.  
     bgCount = 0
     pause = 0
@@ -426,13 +423,17 @@ def endScreenLoss():
     rivalCar.rect.x = rivalStartX
     rivalCar.rect.y = rivalStartY
 
-    #obstaclesCreated = False
+    obstaclesCreated = False
     countdownComplete = False
+    startGame = False
+    pitCreated = False
 
     finishLine.rect.y = finishYstart
 
-    #for ob in obs_list:
-            #ob.kill()
+    for ob in obsGroup:
+            ob.kill()
+
+    #pitGroup.add(pitStop)
 
     #while running, if the user clicks the quit button, the game exits, running is
     #false. If they click the screen, running is false, the function exits, and the
@@ -447,6 +448,7 @@ def endScreenLoss():
                 running = False
                 pygame.quit()
             if event.type == pygame.MOUSEBUTTONDOWN:
+                startScreen()
                 running = False
 
         #The screen is filled blue, game over is displayed, and a message to play
@@ -465,18 +467,21 @@ def endScreenLoss():
 
 def endScreenWin():
 
-    #define the scope for pause, and countdownComplete as global so
+    #define the scope for pause, obstaclesCreated and countdownComplete as global so
     #they can be changed in the function and their values can be saved for use outside
     #of the function
     
-    global pause, bgCount, countdownComplete
+    global pause, bgCount, countdownComplete, obstaclesCreated, endScore, startGame, pitCreated
 
     #reset bgCount, pause, the player and rival start positions, the player's score, countdown
-    #complete, and the finish line's y coordinate to the way they were at
+    #complete, obstaclesCreated and the finish line's y coordinate to the way they were at
     #the beginnning so the user can play again.
     bgCount = 0
     pause = 0
     countdownComplete = False
+    obstaclesCreated = False
+    startGame = False
+    pitCreated = False
     
     playerCar.rect.x = playerStartX
     playerCar.rect.y = playerStartY
@@ -486,6 +491,13 @@ def endScreenWin():
     rivalCar.rect.y = rivalStartY
 
     finishLine.rect.y = finishYstart
+
+    for ob in obsGroup:
+        ob.kill()
+
+    
+
+    finalScore = "Your score: " + str(endScore)
 
     #while running (local variable), if the user clicks the quit button, the game
     #exits, running is false. If they click the screen, running is false, the
@@ -503,6 +515,7 @@ def endScreenWin():
                 running = False
                 pygame.quit()
             if event.type == pygame.MOUSEBUTTONDOWN:
+                startScreen()
                 running = False
 
         
@@ -511,26 +524,32 @@ def endScreenWin():
         #again is displayed. The display is updated
         #
         screen.fill(BLUE)
-        yourScore = largeFont.render("Your score:", 1, BLACK)
+        yourScore = largeFont.render(finalScore, 1, BLACK)
         screen.blit(yourScore, (screenw/2 - yourScore.get_width()/2, 200))
         playAgain = largeFont.render("Click to play again", 1, (0, 0, 0))
         screen.blit(playAgain, (screenw/2 - playAgain.get_width()/2, 300))
 
         pygame.display.update()
 
+pygame.mixer.music.load('GameMusic.wav')
+
 def playMusic():
-    pygame.mixer.music.load('GameMusic.wav')
-    pygame.mixer.music.play()
+    #print("in playMusic")
+    pygame.mixer.music.play(-1)
+    
  
 #set running to true
 running = True
+
+playMusic()
 
 
 
 #main game loop is executed as long as running is True
 while running:
 
-    playMusic()
+    print("playing music")
+    #playMusic()
 
     #while the user has not performed an action indicating they want to start the game,
     #startGame is false and the startScreen function is executed. 
@@ -545,9 +564,17 @@ while running:
             obst.rect.x = random.randrange(screenw - 64)
             obst.rect.y = random.randrange(screenh - 64)
             obsGroup.add(obst)
+
         #once all the obstacles are created, obstaclesCreated is set to true so that
         #this loop does not get repeated 
         obstaclesCreated = True
+
+    if pitCreated == False:
+        pitStop = Pitstop()
+        pitGroup.add(pitStop)
+        pitCreated = True
+
+    
 
     #if the countdown has not happened (the user has just started the game),
     #the countdown function executes and the countdown complete variable is
@@ -619,15 +646,14 @@ while running:
             if bgCount > finishAppear:
                 
                 finishLine.increment()
+                print("finish line incremented")
 
             if bgCount > pitAppear:
 
                 pitStop.scroll()
 
     else:
-        rivalCar.rect.y -= rivalCar.speedy
-                    
-    playMusic()                
+        rivalCar.rect.y -= rivalCar.speedy               
 
     playerCar.playerBound()
 
@@ -636,6 +662,7 @@ while running:
     rivalCar.rivalCollision(obsGroup)
 
     rivalCar.rivalCollision(playerGroup)
+    
     playerCar.playerCollision(rivalGroup)
 
     rivalCar.rivalBound()
@@ -644,9 +671,11 @@ while running:
 
     #if pygame.sprite.spritecollide(playerCar, rivalGroup, False):
         
+        
      
                                    
     if pygame.sprite.spritecollide(playerCar, obsGroup, False):
+        pygame.mixer.Sound.play(playerCar.sound)
 
         playerCar.score -= 1
 
@@ -670,22 +699,17 @@ while running:
     for i in obsGroup:
         i.bounce(rivalGroup)
 
+    for j in obsGroup:
+        j.obsBound(screenw, screenh)
+
 
     if playerCar.score <= 0:
         pause = 1
 
-   
 
-    if pygame.sprite.spritecollide(playerCar, finishGroup, False):
-
-        print("finish x:", finishLine.rect.x)
-        print("finish y:", finishLine.rect.y)
-        print("car x:", playerCar.rect.x)
-        print("car y:", playerCar.rect.y)
-        print("collide with finish")
-        for i in range(5):
-            playerCar.rect.y -= 4
-            playerGroup.draw(screen)
+    if playerCar.rect.y <= finishLine.rect.y - 50:
+        
+        endScore = playerCar.score
 
         endScreenWin()
 
@@ -695,8 +719,12 @@ while running:
     if pygame.sprite.spritecollide(rivalCar, pitGroup, True):
         pitStop.kill()
 
-    #if pygame.sprite.spritecollide(rivalCar, finishGroup, True):
-        #endScreenLoss()
+    #if pygame.sprite.spritecollide(rivalCar, finishGroup, False):
+
+    if rivalCar.rect.y <= finishLine.rect.y - 50:
+        print("rival collided with finish")
+        print("finish y:", finishLine.rect.y)
+        endScreenLoss()
             
 
     pygame.display.update()
