@@ -242,6 +242,8 @@ def instructions():
         #the screen is filled green
         screen.fill(GREEN)
 
+        #call the function to print the instructions on the screen, once
+        #for each instruction string
         printInstruct(instructionString1, 20, smallFont, BLACK, screen)
         printInstruct(instructionString2, 60, smallFont, BLACK, screen)
         printInstruct(instructionString3, 100, smallFont, BLACK, screen)
@@ -316,7 +318,7 @@ def startScreen():
         else:
             hardButton.regular()
 
-        #the instructions button works on the same principle as the other button, but then it is pressed,
+        #the instructions button works on the same principle as the other button, but then if it is pressed,
         #the instructions function is executed (the game does not start in this case)
 
         if instructionsButton.rect.x + instructionsButton.w > mouse[0] > instructionsButton.rect.x and instructionsButton.rect.y + instructionsButton.h > mouse[1] >instructionsButton.rect.y:
@@ -401,18 +403,19 @@ def countdown():
         #running is false so that the function exits
         running = False
 
+        #music plays during the countdown
         playMusic()
 
 #define a function for the end screen when the user has lost the game
 def endScreenLoss():
-    #define the scope for pause, obstaclesCreated, and countdownComplete as global so
+    #define the scope for pause, obstaclesCreated, pitCreated, and countdownComplete as global so
     #they can be changed in the function and their values can be saved for use outside
     #of the function
     global pause, bgCount, countdownComplete, obstaclesCreated, startGame, pitCreated
 
     #reset bgCount, pause, the player and rival start positions, the player's score, countdown
-    #complete, obstaclesCreated and the finish line's y coordinate to the way they were at
-    #the beginnning so the user can play again.  
+    #complete, obstaclesCreated, pitCreated and the finish line's y coordinate to the way they
+    #were at the beginnning so the user can play again.  
     bgCount = 0
     pause = 0
 
@@ -433,11 +436,10 @@ def endScreenLoss():
     for ob in obsGroup:
             ob.kill()
 
-    #pitGroup.add(pitStop)
-
     #while running, if the user clicks the quit button, the game exits, running is
     #false. If they click the screen, running is false, the function exits, and the
-    #game starts again. A slight delay prevents them from clicking too fast
+    #game starts again. A slight delay prevents them from clicking too fast. The losing
+    #sound is played when this function is called (whenever the player loses the game)
 
     pygame.mixer.Sound.play(loseSound)
     running = True
@@ -453,8 +455,7 @@ def endScreenLoss():
 
         #The screen is filled blue, game over is displayed, and a message to play
         #again is displayed. The display is updated
-
-        #
+                
         screen.fill(BLUE)
         gameOver = largeFont.render("Game Over!", 1, (0, 0, 0))
         screen.blit(gameOver, (screenw/2 - gameOver.get_width()/2, 200))
@@ -474,8 +475,8 @@ def endScreenWin():
     global pause, bgCount, countdownComplete, obstaclesCreated, endScore, startGame, pitCreated
 
     #reset bgCount, pause, the player and rival start positions, the player's score, countdown
-    #complete, obstaclesCreated and the finish line's y coordinate to the way they were at
-    #the beginnning so the user can play again.
+    #complete, obstaclesCreated, pitCreated, and the finish line's y coordinate to the way
+    #they were at the beginnning so the user can play again.
     bgCount = 0
     pause = 0
     countdownComplete = False
@@ -495,14 +496,17 @@ def endScreenWin():
     for ob in obsGroup:
         ob.kill()
 
-    
+    #The final score variable is set to the string 'your score' plus
+    #the player's score at th end of the game converted to a string,
+    #to be shown on the end screen
 
     finalScore = "Your score: " + str(endScore)
 
     #while running (local variable), if the user clicks the quit button, the game
     #exits, running is false. If they click the screen, running is false, the
     #function exits, and the game starts again. A slight delay prevents them from
-    #clicking too fast
+    #clicking too fast. The winning sound effect plays when the player wins the game
+    #and is taken to the end screen
 
     pygame.mixer.Sound.play(winSound)
     
@@ -518,7 +522,8 @@ def endScreenWin():
                 startScreen()
                 running = False
 
-        
+        #the screen fills blue, and the player's score is displayed on the screen,
+        #as well as a message to click anywhere to play again. The display is updated. 
         screen.fill(BLUE)
         yourScore = largeFont.render(finalScore, 1, BLACK)
         screen.blit(yourScore, (screenw/2 - yourScore.get_width()/2, 200))
@@ -527,8 +532,10 @@ def endScreenWin():
 
         pygame.display.update()
 
+#load the music file
 pygame.mixer.music.load('GameMusic.wav')
 
+#function to play the music during the menu screens
 def playMusic():
     pygame.mixer.music.play(-1)
     
@@ -536,6 +543,7 @@ def playMusic():
 #set running to true
 running = True
 
+#execute play music function
 playMusic()
 
 
@@ -562,6 +570,9 @@ while running:
         #this loop does not get repeated 
         obstaclesCreated = True
 
+    #The pitstop gets created if it has not yet been created (necessary because the
+    #pitstop gets removed if the player or the rival hits it during the game). After
+    #the pitstop is created, the variable gets set
     if pitCreated == False:
         pitStop = Pitstop()
         pitGroup.add(pitStop)
@@ -575,9 +586,12 @@ while running:
     if countdownComplete == False:
         countdown()
 
-    #if the pause variable is greater than zero, the game ends  
+    #if the pause variable is greater than zero, the game ends (pause becomes
+    #greater than zero when the player's score reaches zero)
     if pause > 0:
         endScreenLoss()
+
+    #if the user presses the quit button, the game exits
         
     for event in pygame.event.get():
         playMusic()
@@ -587,37 +601,60 @@ while running:
             
             pygame.quit()
 
-    
-    
+
+    #create a variable 'keys' to record the key that has been pressed
     keys = pygame.key.get_pressed()
 
+    #If the left key is pressed, the variables tracking the current direction
+    #of the player are changed to l, and the moveLeft method is executed for
+    #the player's car
     if keys[pygame.K_LEFT]:
         currentDirA = 'l'
         currentDirB = 'l'
         playerCar.moveLeft()
 
+    #If the right key is pressed, the variables tracking the current direction
+    #of the player are changed to r, and the moveRight method is executed for
+    #the player's car
     if keys[pygame.K_RIGHT]:
         currentDirA = 'r'
         currentDirB = 'r'
         playerCar.moveRight()
 
+    #If the down key is pressed, the variables tracking the current direction
+    #of the player are changed to d, and the moveDown method is executed for
+    #the player's car
     if keys[pygame.K_DOWN]:
         currentDirB = 'd'
         playerCar.moveDown()
 
-
+    #if the up arrow is pressed, the variable tracking the current direction
+    #of the player is set to up and the rival car moves back one pixel (this
+    #gives the appearance that the player is driving slightly faster than
+    #the rival and is overtaking them
     if keys[pygame.K_UP]:
         currentDirB = 'u'
 
         rivalCar.rect.y += 1
 
+        #Then, if the player is farther down on the screen (beyond y = 350),
+        #the player moves forward up to that point when the up arrow key is
+        #pressed.
+
         if playerCar.rect.y > 350:
             playerCar.moveUp()
 
+        #If they have made it up to y = 350, instead of continuing to move
+        #forward, the background scrolls forward so that it appears as though
+        #the user is still driving forward
         else:
 
             bgY += 10
             bgY2 += 10
+
+            #Two images of the road move down the screen. If one image goes
+            #completely off of the screen, it is returned to the top of the
+            #screen so that it can scroll down again. 
 
             if bgY > bg.get_height():
                 bgY = -600
@@ -625,6 +662,11 @@ while running:
 
             if bgY2 > bg.get_height():
                 bgY2 = -600
+
+            #every time the background scrolls, the variable bgCount increments
+            #by one. Once bgCount gets to certain value (the player has scrolled
+            #a certain "distance", the finish line or the pitstop will appear and
+            #begin moving down the screen as the player continues scrolling.
 
             bgCount+= 1
 
@@ -636,9 +678,15 @@ while running:
 
                 pitStop.scroll()
 
+    #If the user is not pressing the up arrow, the rival car will move forward (this
+    #gives the appearance that the rival car is catching up to the player if they
+    #don't move forward)
     else:
         rivalCar.rect.y -= rivalCar.speedy               
 
+    #execute collision handling functions for the player and the rival, and execute
+    #the drawSprites function to draw everything onto the screen as their positions
+    #are changing
     playerCar.playerBound()
 
     drawSprites()
@@ -655,12 +703,17 @@ while running:
         
         
      
-                                   
+    #if the player collides with any object in the obstacle
+    #group, the crash sound effect is played and the player
+    #loses one point
     if pygame.sprite.spritecollide(playerCar, obsGroup, False):
         pygame.mixer.Sound.play(playerCar.sound)
 
         playerCar.score -= 1
 
+        #depending on which direction the car was hit from, the
+        #car bounces in the opposite direction (away from the
+        #obstacle that hit it)
         for i in obsGroup:
             if i.speedx > 0:
                 playerCar.rect.x += playerCar.speed
@@ -674,42 +727,58 @@ while running:
             if i.speedy < 0:
                 playerCar.rect.y  -= playerCar.speed
       
-
+    #the bounce method is executed for every obstacle in the obstacles
+    #group, once for the player group, and once for the rival group
+    #(when the obstacles hit an object, they bounce off it)
     for x in obsGroup:
         x.bounce(playerGroup)
 
     for i in obsGroup:
         i.bounce(rivalGroup)
 
+    #The boundary function is called for every object in the obstacles group
+    #so that the obstacles stay on the screen
     for j in obsGroup:
         j.obsBound(screenw, screenh)
 
-
+    #if the player's score reaches zero, pause becomes 1 so that the game ends. 
     if playerCar.score <= 0:
         pause = 1
 
-
+    #if the player's y position is 50 greater than the y position of the
+    #finish line (before the rival crosses the finish line), the game ends
+    #in a win for the player. 
     if playerCar.rect.y <= finishLine.rect.y - 50:
         
         endScore = playerCar.score
 
         endScreenWin()
 
+    #if the player collides with the pitstop, the pitstop
+    #disappears and the player gets 30 points added to their
+    #score
     if pygame.sprite.spritecollide(playerCar, pitGroup, True):
         playerCar.score += 30
 
+
+    #if the rival car collides with the pitstop, the pitstop
+    #is removed (the player misses the opportunity to get the
+    #extra points)
     if pygame.sprite.spritecollide(rivalCar, pitGroup, True):
         pitStop.kill()
 
-    #if pygame.sprite.spritecollide(rivalCar, finishGroup, False):
 
+    #if the rival's y coordinate reaches 50 past the finish line's y
+    #coordinate (before the player passes the finish line), the player
+    #loses the game, and the losing end screen is displayed. 
     if rivalCar.rect.y <= finishLine.rect.y - 50:
         endScreenLoss()
             
-
+    #update the display
     pygame.display.update()
 
-                        
+    #set the program to run at 'speed' (60) frames per second                  
     clock.tick(speed)
 
+#quit the program
 pygame.quit()

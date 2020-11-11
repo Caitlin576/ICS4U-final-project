@@ -1,4 +1,5 @@
-
+#create a function to render a string of text in a certain font, center it on
+#the screen, set its colour, and set its y value. 
 
 def printInstruct(string, y, font, colour, screen):
 
