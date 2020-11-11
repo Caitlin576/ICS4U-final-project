@@ -519,10 +519,6 @@ def endScreenWin():
                 running = False
 
         
-
-        #The screen is filled blue, the score is displayed, and a message to play
-        #again is displayed. The display is updated
-        #
         screen.fill(BLUE)
         yourScore = largeFont.render(finalScore, 1, BLACK)
         screen.blit(yourScore, (screenw/2 - yourScore.get_width()/2, 200))
@@ -534,7 +530,6 @@ def endScreenWin():
 pygame.mixer.music.load('GameMusic.wav')
 
 def playMusic():
-    #print("in playMusic")
     pygame.mixer.music.play(-1)
     
  
@@ -548,8 +543,6 @@ playMusic()
 #main game loop is executed as long as running is True
 while running:
 
-    print("playing music")
-    #playMusic()
 
     #while the user has not performed an action indicating they want to start the game,
     #startGame is false and the startScreen function is executed. 
@@ -585,13 +578,6 @@ while running:
     #if the pause variable is greater than zero, the game ends  
     if pause > 0:
         endScreenLoss()
-        #pause += 1
-        #if pause == 2:
-            #pygame.time.delay(600)
-            #endScreenLoss()
-
-    #if pygame.sprite.spritecollide(rivalCar, finishGroup, False):
-        #endScreenLoss()
         
     for event in pygame.event.get():
         playMusic()
@@ -641,12 +627,10 @@ while running:
                 bgY2 = -600
 
             bgCount+= 1
-            print("bgCount:", bgCount)
 
             if bgCount > finishAppear:
                 
                 finishLine.increment()
-                print("finish line incremented")
 
             if bgCount > pitAppear:
 
@@ -668,8 +652,6 @@ while running:
     rivalCar.rivalBound()
 
     playerCar.collideBound(boundaryGroup, currentDirA)
-
-    #if pygame.sprite.spritecollide(playerCar, rivalGroup, False):
         
         
      
@@ -722,8 +704,6 @@ while running:
     #if pygame.sprite.spritecollide(rivalCar, finishGroup, False):
 
     if rivalCar.rect.y <= finishLine.rect.y - 50:
-        print("rival collided with finish")
-        print("finish y:", finishLine.rect.y)
         endScreenLoss()
             
 
